@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Sample App</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header>
+    <h1>Sample app for storing data</h1>
+</header>
+
+<section class="container">
+    <form id="my-form">
+        <h1>Add New User</h1>
+        <div class="msg"></div>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <label for="Phone">Phone Number:</label>
+            <input type="number" id="Phone">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email"> 
+        </div>
+        <input class="btn" type="submit" value="Submit">
+    </form>
+
+    <ul id="users"></ul>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script>
+    const form = document.getElementById('my-form');
+    const messages = document.querySelector('.msg');
+    const userList = document.getElementById('users');
+
+    form.addEventListener('submit', handleFormSubmit);
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+
+        const nameInput = document.getElementById('name');
+        const phoneInput = document.getElementById('Phone');
+        const emailInput = document.getElementById('email');
+
+        const name = nameInput.value;
+        const phone = phoneInput.value;
+        const email = emailInput.value;
+
+        const userDetails = {
+            name: name,
+            phone: phone,
+            email: email
+        };
+
+        axios.post('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata', userDetails)
+        .then(response => {
+            showSuccess('User details stored successfully');
+            refreshUserList();
+            nameInput.value = '';
+            phoneInput.value = '';
+            emailInput.value = '';
+        })
+        .catch(error => {
+            showError('Error storing user details: ' + error.message);
+        });
+    }
+
+    function showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success';
+        successDiv.appendChild(document.createTextNode(message));
+        messages.appendChild(successDiv);
+        setTimeout(function () {
+            successDiv.remove();
+        }, 3000);
+    }
+
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.appendChild(document.createTextNode(message));
+        messages.appendChild(errorDiv);
+        setTimeout(function () {
+            errorDiv.remove();
+        }, 3000);
+    }
+
+    function refreshUserList() {
+        axios.get('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata')
+        .then(response => {
+            userList.innerHTML = '';
+            const users = response.data;
+            users.forEach(function (user) {
+                const li = document.createElement('li');
+                li.appendChild(document.createTextNode(`Name: ${user.name}, Phone: ${user.phone}, Email: ${user.email}`));
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function() {
+                    deleteUser(user._id); // Pass the user ID for deletion
+                });
+
+                li.appendChild(deleteButton);
+                userList.appendChild(li);
+            });
+        })
+        .catch(error => {
+            showError('Error  the user data not found : ' + error.message);
+        });
+    }
+    function deleteUser(userId) {
+        axios.delete('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata' + '/' + userId)
+        .then(response => {
+            
+            refreshUserList();
+        })
+        .catch(error => {
+            showError('Error deleting user: ' + error.message);
+        });
+    }  
+   
+    
+</script>
+</body>
+</html>
