@@ -34,13 +34,17 @@
     <ul id="users"></ul>
 </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     const form = document.getElementById('my-form');
     const messages = document.querySelector('.msg');
     const userList = document.getElementById('users');
 
     form.addEventListener('submit', handleFormSubmit);
+
+    window.addEventListener('DOMContentLoaded', function() {
+        refreshUserList();
+    });
 
     function handleFormSubmit(event) {
         event.preventDefault();
@@ -59,7 +63,7 @@
             email: email
         };
 
-        axios.post('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata', userDetails)
+        axios.post('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata', userDetails)
         .then(response => {
             showSuccess('User details stored successfully');
             refreshUserList();
@@ -93,7 +97,7 @@
     }
 
     function refreshUserList() {
-        axios.get('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata')
+        axios.get('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata')
         .then(response => {
             userList.innerHTML = '';
             const users = response.data;
@@ -104,7 +108,7 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.addEventListener('click', function() {
-                    deleteUser(user._id); // Pass the user ID for deletion
+                    deleteUser(user._id); 
                 });
 
                 li.appendChild(deleteButton);
@@ -116,7 +120,7 @@
         });
     }
     function deleteUser(userId) {
-        axios.delete('https://crudcrud.com/api/15a070cac0f24507bd1b1634d0015469/appointmentdata' + '/' + userId)
+        axios.delete('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata' + '/' + userId)
         .then(response => {
             
             refreshUserList();
