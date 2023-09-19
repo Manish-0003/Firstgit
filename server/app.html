@@ -63,7 +63,7 @@
             email: email
         };
 
-        axios.post('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata', userDetails)
+        axios.post('https://crudcrud.com/api/0dda43db031b4a2eb3c766943c806728/appointmentdata', userDetails)
         .then(response => {
             showSuccess('User details stored successfully');
             refreshUserList();
@@ -97,7 +97,7 @@
     }
 
     function refreshUserList() {
-        axios.get('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata')
+        axios.get('https://crudcrud.com/api/0dda43db031b4a2eb3c766943c806728/appointmentdata')
         .then(response => {
             userList.innerHTML = '';
             const users = response.data;
@@ -106,7 +106,7 @@
                 li.appendChild(document.createTextNode(`Name: ${user.name}, Phone: ${user.phone}, Email: ${user.email}`));
 
                 const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
+                deleteButton.innerHTML = 'Delete <i class="fas fa-trash"></i>'; 
                 deleteButton.addEventListener('click', function() {
                     deleteUser(user._id); 
                 });
@@ -116,21 +116,19 @@
             });
         })
         .catch(error => {
-            showError('Error  the user data not found : ' + error.message);
+            showError('Error fetching user data: ' + error.message);
         });
     }
+
     function deleteUser(userId) {
-        axios.delete('https://crudcrud.com/api/7ad041ef2c674183910867b74c78f0f5/appointmentdata' + '/' + userId)
+        axios.delete('https://crudcrud.com/api/0dda43db031b4a2eb3c766943c806728/appointmentdata/' + userId)
         .then(response => {
-            
             refreshUserList();
         })
         .catch(error => {
             showError('Error deleting user: ' + error.message);
         });
     }  
-   
-    
 </script>
 </body>
 </html>
